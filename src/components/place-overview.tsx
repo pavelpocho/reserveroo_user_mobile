@@ -5,22 +5,19 @@ import RootStackParamList from "../root-stack-param-list/root-stack-param-list";
 
 type PropType = Partial<React.ComponentProps<typeof View>> & NativeStackScreenProps<RootStackParamList, 'Default'>;
 interface PlaceDetailProps extends PropType {
-    
+    placeId: string
 }
 
-const PlaceDetail: React.FC<PlaceDetailProps> = ({ route, navigation, ...props }) => {
-
-    const params: any = route.params;
-
+const PlaceOverview: React.FC<PlaceDetailProps> = ({ navigation, placeId, ...props }) => {
     return (
         <View>
-            <Text>Place detail</Text>
-            <Text>{params.placeId}</Text>
-            <Button title="Reserve place" onPress={() => {
-                navigation.navigate("PlaceReservation")
+            <Text>Place overview</Text>
+            <Text>{placeId}</Text>
+            <Button title="See details" onPress={() => {
+                navigation.navigate("PlaceDetail", { placeId })
             }} />
         </View>
     )
 }
 
-export default PlaceDetail;
+export default PlaceOverview;

@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react"
 import { View, Text, Button } from "react-native"
+import PlaceOverview from "../components/place-overview";
 import RootStackParamList from "../root-stack-param-list/root-stack-param-list";
 
 type PropType = Partial<React.ComponentProps<typeof View>> & NativeStackScreenProps<RootStackParamList, 'Default'>;
@@ -9,13 +10,12 @@ interface PlaceListProps extends PropType {
 }
 
 
-const PlaceList: React.FC<PlaceListProps> = ({ navigation, ...props }) => {
+const PlaceList: React.FC<PlaceListProps> = ({ navigation, route, ...props }) => {
     return (
         <View>
-            <Text>Place list</Text>
-            <Button title="See details of place" onPress={() => {
-                navigation.navigate("PlaceDetail")
-            }} />
+            <PlaceOverview navigation={navigation} route={route} placeId={"Biliard"} />
+            <PlaceOverview navigation={navigation} route={route} placeId={"Restaurace"} />
+            <PlaceOverview navigation={navigation} route={route} placeId={"Tenis"} />
         </View>
     )
 }

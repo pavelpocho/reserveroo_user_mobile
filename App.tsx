@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import RootStackParamList from './src/root-stack-param-list/root-stack-param-list';
 import PlaceDetail from './src/screens/place-detail';
 import PlaceList from './src/screens/place-list';
 import PlaceReservation from './src/screens/place-reservation';
