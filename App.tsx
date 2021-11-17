@@ -14,7 +14,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="PlaceList">
-          <Stack.Screen name="PlaceList" component={PlaceList} />
+          <Stack.Screen name="PlaceList" component={PlaceList} options={{ title: "Seznam míst" }} />
           <Stack.Screen name="PlaceDetail" component={PlaceDetail} />
           <Stack.Screen name="PlaceReservation" component={PlaceReservation} />
       </Stack.Navigator>
