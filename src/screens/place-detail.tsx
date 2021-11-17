@@ -40,7 +40,7 @@ const PlaceDetail: React.FC<PlaceDetailProps> = ({ route, navigation, ...props }
                     </View>)
                 }
                 <Button title="Vytvořit rezervaci" onPress={() => {
-                    navigation.navigate("PlaceReservation")
+                    navigation.navigate("PlaceReservation", { placeId: params.placeId })
                 }} />
             </View>
         </ScrollView>
