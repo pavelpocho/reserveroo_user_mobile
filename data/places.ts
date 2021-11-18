@@ -10,12 +10,18 @@ const places: Place[] = [
             {
                 id: '0',
                 type: ReservableType.billiard,
-                howMany: 1
+                howMany: 1,
+                openHour: 13,
+                closeHour: 23,
+                timeStepInHours: 0.5
             },
             {
                 id: '1',
                 type: ReservableType.bowling,
-                howMany: 3
+                howMany: 3,
+                openHour: 13,
+                closeHour: 23,
+                timeStepInHours: 1
             }
         ]
     },
@@ -27,7 +33,10 @@ const places: Place[] = [
             {
                 id: '1',
                 type: ReservableType.table,
-                howMany: 12
+                howMany: 12,
+                openHour: 10,
+                closeHour: 21,
+                timeStepInHours: 2
             }
         ]
     },
@@ -39,12 +48,18 @@ const places: Place[] = [
             {
                 id: '0',
                 type: ReservableType.tennis,
-                howMany: 3
+                howMany: 3,
+                openHour: 7,
+                closeHour: 4,
+                timeStepInHours: 0.5
             },
             {
                 id: '0',
                 type: ReservableType.badminton,
-                howMany: 5
+                howMany: 5,
+                openHour: 9,
+                closeHour: 9,
+                timeStepInHours: 0.5
             }
         ]
     }

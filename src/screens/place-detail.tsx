@@ -35,7 +35,7 @@ const PlaceDetail: React.FC<PlaceDetailProps> = ({ route, navigation, ...props }
                 <Text style={styles.description}>{place?.description ?? 'NoDesc'}</Text>
                 <Text style={styles.reservableTitle}>Prostory:</Text>
                 {
-                    place?.reservables.map((r, i) => <View style={styles.reservableWrap}>
+                    place?.reservables.map((r, i) => <View style={styles.reservableWrap} key={i}>
                         <Text style={styles.reservableText}>{reservableTypeTexts[r.type]}: {r.howMany}x</Text>
                     </View>)
                 }

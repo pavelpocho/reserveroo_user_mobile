@@ -1,7 +1,10 @@
 interface Reservable {
     id: string,
     type: Type,
-    howMany: number
+    howMany: number,
+    openHour: number,
+    closeHour: number,
+    timeStepInHours: number
 }
 
 enum Type {
