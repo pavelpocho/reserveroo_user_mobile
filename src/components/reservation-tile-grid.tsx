@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { View, StyleSheet, ScrollView, Text, TouchableHighlight } from "react-native"
+import { useReservationContext } from "../contexts/reservation-context";
 import Reservable, { reservableTypeTexts } from "../data_mgmt/reservable";
 import Reservation from "../data_mgmt/reservation";
 
@@ -14,15 +15,16 @@ const ReservationTileGrid: React.FC<ReservationTileGridProps> = ({ reservable })
     const r = reservable;
 
     const range = (start: number, end: number): number[] => {
-        if(start === end) return [start];
+        if (start > end) throw new Error("Start in range more than in end!");
+        if (start === end) return [start];
         return [start, ...range(start + 1, end)];
     }
 
     const updateReservationTimes = (sectionTapped: number, row: number) => {
-        setReservation((prevR) => {
+        if (setReservation) setReservation((prevR) => {
             prevR.row = row;
             prevR.date = new Date();
-            if (prevR.startSection === sectionTapped) {
+            if (prevR.startSection === sectionTapped || prevR.endSection === sectionTapped) {
                 return { 
                     startSection: sectionTapped,
                     endSection: sectionTapped,
@@ -46,10 +48,9 @@ const ReservationTileGrid: React.FC<ReservationTileGridProps> = ({ reservable })
                     row: row
                 }
             }
-            console.log(prevR.startSection);
-            console.log(sectionTapped);            
             if (prevR.startSection !== undefined && sectionTapped > prevR.startSection) {
                 return { 
+                    startSection: prevR.startSection,
                     endSection: sectionTapped, 
                     date: new Date(),
                     row: row
@@ -67,7 +68,10 @@ const ReservationTileGrid: React.FC<ReservationTileGridProps> = ({ reservable })
         })
     }
 
-    const [ reservation, setReservation ] = useState<Reservation>({});
+    const context = useReservationContext();
+    const reservation = context?.reservation;
+    const setReservation = context?.setReservation;
+    // This will eventually be a context so only one selection will be possible
 
     return <ScrollView style={ styles.scrollContainer } contentContainerStyle={{ flexWrap: 'wrap' }} horizontal={true} >
         <View style={styles.wrap}>
@@ -81,7 +85,17 @@ const ReservationTileGrid: React.FC<ReservationTileGridProps> = ({ reservable })
                     <TouchableHighlight style={styles.tileButton} underlayColor='#aaa' onPress={() => {
                         updateReservationTimes(t, n);
                     }}>
-                        <View style={t >= (reservation.startSection ?? 10000) && t <= (reservation.endSection ?? -10000) && reservation.row == n ? styles.highlight : {}}></View>
+                        <View style={
+                            (t > (reservation?.startSection ?? 10000) && t < (reservation?.endSection ?? -10000) && reservation?.row === n) ? (
+                                styles.highlight
+                            ) : (t === reservation?.startSection && t === reservation?.endSection && reservation?.row === n) ? (
+                                styles.onlyHighlight
+                            ) : (t === reservation?.startSection && reservation.row === n) ? (
+                                styles.startHighlight
+                            ) : (t === reservation?.endSection && reservation.row === n) ? (
+                                styles.endHighlight
+                            ) : {}
+                        }></View>
                     </TouchableHighlight>
                 </View>)}
             </View>)}
@@ -139,6 +153,25 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     highlight: {
+        height: 20,
+        width: 20,
+        backgroundColor: 'blue'
+    },
+    startHighlight: {
+        borderTopLeftRadius: 10,
+        borderBottomLeftRadius: 10,
+        height: 20,
+        width: 20,
+        backgroundColor: 'blue'
+    },
+    endHighlight: {
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        height: 20,
+        width: 20,
+        backgroundColor: 'blue'
+    },
+    onlyHighlight: {
         borderRadius: 10,
         height: 20,
         width: 20,

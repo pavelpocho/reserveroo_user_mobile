@@ -50,7 +50,7 @@ const places: Place[] = [
                 type: ReservableType.tennis,
                 howMany: 3,
                 openHour: 7,
-                closeHour: 4,
+                closeHour: 16,
                 timeStepInHours: 0.5
             },
             {
@@ -58,7 +58,7 @@ const places: Place[] = [
                 type: ReservableType.badminton,
                 howMany: 5,
                 openHour: 9,
-                closeHour: 9,
+                closeHour: 21,
                 timeStepInHours: 0.5
             }
         ]
