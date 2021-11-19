@@ -7,6 +7,8 @@ import { reservableTypeTexts } from "../data_mgmt/reservable";
 import RootStackParamList from "../root-stack-param-list/root-stack-param-list";
 import { MaterialIcons } from '@expo/vector-icons';
 import ReservationTileGrid from "../components/reservation-tile-grid";
+import { useReservationContext } from "../contexts/reservation-context";
+import { useUserContext } from "../contexts/user-context";
 
 type PropType = Partial<React.ComponentProps<typeof View>> & NativeStackScreenProps<RootStackParamList, 'Default'>;
 interface PlaceReservationProps extends PropType {
@@ -21,6 +23,14 @@ const PlaceReservation: React.FC<PlaceReservationProps> = ({ route, navigation, 
 
     const [selectedDate, setSelectedDate] = useState(new Date());
 
+    const reservationContext = useReservationContext();
+    const reservation = reservationContext?.reservation;
+    const setReservation = reservationContext?.setReservation;
+
+    const userContext = useUserContext();
+    const user = userContext?.user;
+    const setUser = userContext?.setUser;
+
 	function getDayOfWeek(date: Date): string {
 		return date.getDay() === 1 ? 'Pondělí' :
 			date.getDay() === 2 ? 'Úterý' :
@@ -34,9 +44,46 @@ const PlaceReservation: React.FC<PlaceReservationProps> = ({ route, navigation, 
 		return date.getDate().toString() + '.' + (date.getMonth() + 1).toString() + '.' + date.getFullYear().toString();
 	}
 
+    const alertComplete = () => {
+        Alert.alert(
+            "Reservation complete",
+            "Thank your for your reservation. Look at it in app or email.",
+            [{
+                onPress: () => {
+                    console.log("Created reservation:");
+                    console.log(reservation);
+                    if (setReservation) setReservation(() => {
+                        return {}
+                    });                
+                    navigation.navigate("PlaceList");
+                }
+            }]
+        );
+    }
+
+    const attemptSubmit = () => {
+        if (user !== undefined) {
+            navigation.navigate("UserInfoInput");
+        }
+        else if (reservation?.startSection && reservation.endSection) {            
+            alertComplete();
+        }
+        else {
+            Alert.alert(
+                "No time selected",
+                "You must select a reservation time.",
+                [{
+                    onPress: () => {
+                        
+                    }
+                }]
+            );
+        }
+    }
+
     return (
         <ScrollView style={styles.scrollContainer} contentContainerStyle={{flexWrap: 'wrap'}}>
-            <View style={styles.wrap}>      
+            <View style={styles.wrap}>    
                 <View style={styles.header}>
                     <TouchableHighlight underlayColor='#aaa' style={styles.headerButton} onPress={() => {
                         setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() - 1));
@@ -63,17 +110,7 @@ const PlaceReservation: React.FC<PlaceReservationProps> = ({ route, navigation, 
                         </View>
                     </View>)
                 }
-                <Button title="Reserve my place" onPress={() => {
-                    Alert.alert(
-                        "Reservation complete",
-                        "Thank your for your reservation. Look at it in app or email.",
-                        [{
-                            onPress: () => {
-                                navigation.navigate("PlaceList");
-                            }
-                        }]
-                    );
-                }} />
+                <Button title="Reserve my place" onPress={attemptSubmit} />
             </View>
         </ScrollView>
     )
