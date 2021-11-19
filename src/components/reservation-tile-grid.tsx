@@ -85,8 +85,6 @@ const ReservationTileGrid: React.FC<ReservationTileGridProps> = ({ reservable, p
     const reservation = context?.reservation;
     const setReservation = context?.setReservation;
 
-    // This will eventually be a context so only one selection will be possible
-
     return <ScrollView style={ styles.scrollContainer } contentContainerStyle={{ flexWrap: 'wrap' }} horizontal={true} >
         <View style={styles.wrap}>
             <View style={styles.timeWrap}>

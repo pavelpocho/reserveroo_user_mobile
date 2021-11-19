@@ -21,7 +21,13 @@ const PlaceReservation: React.FC<PlaceReservationProps> = ({ route, navigation, 
 
     const place = places.find(p => p.id == params.placeId.toString());
 
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    const defaultDate = new Date();
+    defaultDate.setMilliseconds(0);
+    defaultDate.setSeconds(0);
+    defaultDate.setMinutes(0);
+    defaultDate.setHours(0);
+
+    const [selectedDate, setSelectedDate] = useState(defaultDate);
 
     const reservationContext = useReservationContext();
     const reservation = reservationContext?.reservation;
