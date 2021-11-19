@@ -54,7 +54,7 @@ const places: Place[] = [
                 timeStepInHours: 0.5
             },
             {
-                id: '0',
+                id: '1',
                 type: ReservableType.badminton,
                 howMany: 5,
                 openHour: 9,

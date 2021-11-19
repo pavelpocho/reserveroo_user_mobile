@@ -58,7 +58,7 @@ const PlaceReservation: React.FC<PlaceReservationProps> = ({ route, navigation, 
                         <Text style={styles.reservableTitle}>{reservableTypeTexts[r.type]} {r.howMany}x</Text>
                         <View style={styles.reserveTilesWrap}>
                             <View style={styles.reserveTileContent}>
-                                <ReservationTileGrid reservable={r} />
+                                <ReservationTileGrid reservable={r} place={place} date={selectedDate} />
                             </View>
                         </View>
                     </View>)

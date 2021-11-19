@@ -1,16 +1,19 @@
 import React, { useState } from "react"
 import { View, StyleSheet, ScrollView, Text, TouchableHighlight } from "react-native"
 import { useReservationContext } from "../contexts/reservation-context";
+import Place from "../data_mgmt/place";
 import Reservable, { reservableTypeTexts } from "../data_mgmt/reservable";
 import Reservation from "../data_mgmt/reservation";
 
 
 type PropType = Partial<React.ComponentProps<typeof View>>;
 interface ReservationTileGridProps extends PropType {
-    reservable: Reservable
+    reservable: Reservable,
+    place: Place,
+    date: Date
 }
 
-const ReservationTileGrid: React.FC<ReservationTileGridProps> = ({ reservable }) => {
+const ReservationTileGrid: React.FC<ReservationTileGridProps> = ({ reservable, place, date }) => {
     
     const r = reservable;
 
@@ -22,48 +25,58 @@ const ReservationTileGrid: React.FC<ReservationTileGridProps> = ({ reservable })
 
     const updateReservationTimes = (sectionTapped: number, row: number) => {
         if (setReservation) setReservation((prevR) => {
-            prevR.row = row;
-            prevR.date = new Date();
+            if (prevR.row !== row) {
+                prevR.startSection = undefined;
+                prevR.endSection = undefined;
+            }
             if (prevR.startSection === sectionTapped || prevR.endSection === sectionTapped) {
                 return { 
                     startSection: sectionTapped,
                     endSection: sectionTapped,
-                    date: new Date(),
-                    row: row
+                    date: date,
+                    row: row,
+                    placeId: place.id,
+                    reservableId: reservable.id
                 }
             }
             if (prevR.startSection === undefined && prevR.endSection === undefined) {
                 return { 
                     startSection: sectionTapped, 
                     endSection: sectionTapped,
-                    date: new Date(),
-                    row: row
+                    date: date,
+                    row: row,
+                    placeId: place.id,
+                    reservableId: reservable.id
                 }
             }
             if (prevR.startSection !== undefined && sectionTapped < prevR.startSection) {
                 return { 
                     startSection: sectionTapped, 
                     endSection: prevR.startSection,
-                    date: new Date(),
-                    row: row
+                    date: date,
+                    row: row,
+                    placeId: place.id,
+                    reservableId: reservable.id
                 }
             }
             if (prevR.startSection !== undefined && sectionTapped > prevR.startSection) {
                 return { 
                     startSection: prevR.startSection,
                     endSection: sectionTapped, 
-                    date: new Date(),
-                    row: row
+                    date: date,
+                    row: row,
+                    placeId: place.id,
+                    reservableId: reservable.id
                 }
             }
             let r: Reservation = {
-                date: new Date(),
                 startSection: sectionTapped,
                 endSection: sectionTapped,
-                row
+                date: date,
+                row,
+                placeId: place.id,
+                reservableId: reservable.id
             }
-            console.log("Fallback");
-            console.log(r);
             return r;
         })
     }
@@ -71,6 +84,7 @@ const ReservationTileGrid: React.FC<ReservationTileGridProps> = ({ reservable })
     const context = useReservationContext();
     const reservation = context?.reservation;
     const setReservation = context?.setReservation;
+
     // This will eventually be a context so only one selection will be possible
 
     return <ScrollView style={ styles.scrollContainer } contentContainerStyle={{ flexWrap: 'wrap' }} horizontal={true} >
@@ -85,17 +99,17 @@ const ReservationTileGrid: React.FC<ReservationTileGridProps> = ({ reservable })
                     <TouchableHighlight style={styles.tileButton} underlayColor='#aaa' onPress={() => {
                         updateReservationTimes(t, n);
                     }}>
-                        <View style={
-                            (t > (reservation?.startSection ?? 10000) && t < (reservation?.endSection ?? -10000) && reservation?.row === n) ? (
+                        {reservation?.placeId == place.id && reservation?.reservableId == reservable.id && reservation?.row === n && reservation?.date?.getTime() == date.getTime() ? <View style={
+                            (t > (reservation?.startSection ?? 10000) && t < (reservation?.endSection ?? -10000)) ? (
                                 styles.highlight
-                            ) : (t === reservation?.startSection && t === reservation?.endSection && reservation?.row === n) ? (
+                            ) : (t === reservation?.startSection && t === reservation?.endSection) ? (
                                 styles.onlyHighlight
-                            ) : (t === reservation?.startSection && reservation.row === n) ? (
+                            ) : (t === reservation?.startSection) ? (
                                 styles.startHighlight
-                            ) : (t === reservation?.endSection && reservation.row === n) ? (
+                            ) : (t === reservation?.endSection) ? (
                                 styles.endHighlight
                             ) : {}
-                        }></View>
+                        }></View> : <View></View>}
                     </TouchableHighlight>
                 </View>)}
             </View>)}
@@ -133,7 +147,7 @@ const styles = StyleSheet.create({
         height: '100%',
         width: '100%',
         justifyContent: 'center',
-        alignItems: 'center'
+        // alignItems: 'center'
     },
     title: {
         width: 70
@@ -154,28 +168,31 @@ const styles = StyleSheet.create({
     },
     highlight: {
         height: 20,
-        width: 20,
+        width: '100%',
         backgroundColor: 'blue'
     },
     startHighlight: {
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,
         height: 20,
-        width: 20,
-        backgroundColor: 'blue'
+        width: 35,
+        backgroundColor: 'blue',
+        alignSelf: 'flex-end'
     },
     endHighlight: {
         borderTopRightRadius: 10,
         borderBottomRightRadius: 10,
         height: 20,
-        width: 20,
-        backgroundColor: 'blue'
+        width: 35,
+        backgroundColor: 'blue',
+        alignSelf: 'flex-start'
     },
     onlyHighlight: {
         borderRadius: 10,
         height: 20,
         width: 20,
-        backgroundColor: 'blue'
+        backgroundColor: 'blue',
+        alignSelf: 'center'
     }
 })
 
