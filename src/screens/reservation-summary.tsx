@@ -58,17 +58,28 @@ const ReservationSummary: React.FC<ReservationSummaryProps> = ({ navigation, rou
                     <Text>Vaše rezervace</Text>
                 </View>
                 <View style={styles.body}>
-                    <Text>Datum</Text>
-                    <Text>{startDate.getDate() + '.' + (startDate.getMonth() + 1) + '.' + startDate.getFullYear()}</Text>
-                    <Text>Čas</Text>
-                    <Text>{startDate.getHours() + ':' + startDate.getMinutes()}</Text>
-                    <Text>Délka</Text>
-                    {durationHours > 0 && <Text>
-                        {durationHours} hodin
-                    </Text>}
-                    {durationMins > 0 && <Text>
-                        {durationMins} minut
-                    </Text>}
+                    <View style={styles.sectionWrap}>
+                        <Text style={styles.sectionTitle}>Informace o rezervaci</Text>
+                        <Text style={styles.itemTitle}>Datum</Text>
+                        <Text style={styles.itemText}>{startDate.getDate() + '.' + (startDate.getMonth() + 1) + '.' + startDate.getFullYear()}</Text>
+                        <Text style={styles.itemTitle}>Čas</Text>
+                        <Text style={styles.itemText}>{startDate.getHours() + ':' + startDate.getMinutes()}</Text>
+                        <Text style={styles.itemTitle}>Délka</Text>
+                        <Text style={styles.itemText}>
+                            {durationHours > 0 && (durationHours + ` hodin${durationHours === 1 ? 'a' : durationHours <= 4 ? 'y' : ''}`)}
+                            &nbsp;
+                            {durationMins > 0 && (durationMins + ` minut${durationMins === 1 ? 'a' : durationMins <= 4 ? 'y' : ''}`)}
+                        </Text>
+                    </View>
+                    <View style={styles.sectionWrap}>
+                        <Text style={styles.sectionTitle}>Kontaktní údaje</Text>
+                        <Text style={styles.itemTitle}>Jméno</Text>
+                        <Text style={styles.itemText}>{person?.firstName + ' ' + person?.familyName}</Text>
+                        <Text style={styles.itemTitle}>Email</Text>
+                        <Text style={styles.itemText}>{person?.email}</Text>
+                        <Text style={styles.itemTitle}>Telefon</Text>
+                        <Text style={styles.itemText}>{person?.phone}</Text>
+                    </View>
                 </View>
                 <Button title="Rezervovat" onPress={alertComplete} />
             </View>
@@ -100,6 +111,26 @@ const styles = StyleSheet.create({
     },
     body: {
         
+    },
+    sectionWrap: {
+        margin: 12,
+        padding: 16,
+        borderRadius: 16,
+        backgroundColor: 'white'
+    },
+    sectionTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 10
+    },
+    itemTitle: {
+        fontSize: 14,
+        color: '#666',
+        fontWeight: 'bold'
+    },
+    itemText: {
+        fontSize: 17,
+        marginBottom: 10
     }
 });
 
