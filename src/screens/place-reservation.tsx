@@ -50,29 +50,14 @@ const PlaceReservation: React.FC<PlaceReservationProps> = ({ route, navigation, 
 		return date.getDate().toString() + '.' + (date.getMonth() + 1).toString() + '.' + date.getFullYear().toString();
 	}
 
-    const alertComplete = () => {
-        Alert.alert(
-            "Reservation complete",
-            "Thank your for your reservation. Look at it in app or email.",
-            [{
-                onPress: () => {
-                    console.log("Created reservation:");
-                    console.log(reservation);
-                    if (setReservation) setReservation(() => {
-                        return {}
-                    });                
-                    navigation.navigate("PlaceList");
-                }
-            }]
-        );
-    }
+    
 
     const attemptSubmit = () => {
         if (user !== undefined) {
             navigation.navigate("UserInfoInput");
         }
         else if (reservation?.startSection && reservation.endSection) {            
-            alertComplete();
+            navigation.navigate("ReservationSummary")
         }
         else {
             Alert.alert(
@@ -116,7 +101,7 @@ const PlaceReservation: React.FC<PlaceReservationProps> = ({ route, navigation, 
                         </View>
                     </View>)
                 }
-                <Button title="Reserve my place" onPress={attemptSubmit} />
+                <Button title={user !== undefined ? 'Pokračovat' : 'Pokračovat ke shrnutí'} onPress={attemptSubmit} />
             </View>
         </ScrollView>
     )

@@ -17,10 +17,10 @@ const ReservationTileGrid: React.FC<ReservationTileGridProps> = ({ reservable, p
     
     const r = reservable;
 
-    const range = (start: number, end: number): number[] => {
-        if (start > end) throw new Error("Start in range more than in end!");
+    const range = (start: number, end: number, increment: number): number[] => {
+        if (start > end) return [];
         if (start === end) return [start];
-        return [start, ...range(start + 1, end)];
+        return [start, ...range(start + increment, end, increment)];
     }
 
     const updateReservationTimes = (sectionTapped: number, row: number) => {
@@ -81,6 +81,19 @@ const ReservationTileGrid: React.FC<ReservationTileGridProps> = ({ reservable, p
         })
     }
 
+    const getTimes = (startHour: number, endHour: number, timeStepInHours: number): Date[] => {
+        return range(startHour, endHour, timeStepInHours).map(v => {
+            const m = (v * 60) % 60;
+            const h = Math.floor(v);
+            let date = new Date();
+            date.setMilliseconds(0);
+            date.setSeconds(0);
+            date.setMinutes(m);
+            date.setHours(v);
+            return date;
+        })
+    }
+
     const context = useReservationContext();
     const reservation = context?.reservation;
     const setReservation = context?.setReservation;
@@ -89,11 +102,11 @@ const ReservationTileGrid: React.FC<ReservationTileGridProps> = ({ reservable, p
         <View style={styles.wrap}>
             <View style={styles.timeWrap}>
                 <Text style={styles.timeTitle}>Čas</Text>
-                {range(r.openHour, r.closeHour).map(h => <Text style={styles.time} key={h}>{h}</Text>)}
+                {getTimes(r.openHour, r.closeHour - r.timeStepInHours, r.timeStepInHours).map(d => <Text style={styles.time} key={d.getTime()}>{d.getHours() + ':' + (d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes())}</Text>)}
             </View>
             {Array.from(Array(r.howMany).keys()).map(n => <View style={styles.rowWrap} key={n}>
                 <Text style={styles.title}>{reservableTypeTexts[r.type]} #{n + 1}</Text>
-                {Array.from(Array(r.closeHour - r.openHour + 1).keys()).map(t => <View style={styles.tileWrap} key={t}>
+                {Array.from(Array((r.closeHour - r.openHour) / r.timeStepInHours).keys()).map(t => <View style={styles.tileWrap} key={t}>
                     <TouchableHighlight style={styles.tileButton} underlayColor='#aaa' onPress={() => {
                         updateReservationTimes(t, n);
                     }}>
@@ -151,7 +164,7 @@ const styles = StyleSheet.create({
         width: 70
     },
     timeTitle: {
-        width: 70,
+        width: 45,
     },
     timeWrap: {
         height: 32,

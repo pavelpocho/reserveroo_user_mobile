@@ -35,7 +35,7 @@ const places: Place[] = [
                 type: ReservableType.table,
                 howMany: 12,
                 openHour: 10,
-                closeHour: 21,
+                closeHour: 22,
                 timeStepInHours: 2
             }
         ]

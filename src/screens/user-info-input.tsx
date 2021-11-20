@@ -13,13 +13,10 @@ interface UserInfoInputProps extends PropType {
 const UserInfoInput: React.FC<UserInfoInputProps> = ({ navigation, route, ...props }) => {
 
     const reservationContext = useReservationContext();
-    const reservation = reservationContext?.reservation;
-    const setReservation = reservationContext?.setReservation;
+    const person = reservationContext?.person;
+    const setPerson = reservationContext?.setPerson;
 
     return (
-        // this shit is just broken
-        // its the same thing four times and behaves differently each time
-        // react native ftw
         <ScrollView style={styles.scrollContainer} contentContainerStyle={{flexWrap: 'wrap'}}>
             <View style={styles.wrap}>
                 <View style={styles.header}>
@@ -27,59 +24,35 @@ const UserInfoInput: React.FC<UserInfoInputProps> = ({ navigation, route, ...pro
                 </View>
                 <View style={styles.body}>
                     <Text>Jméno</Text>
-                    <TextInput value={reservation?.person?.firstName} /*style={textInputStyles.basic}*/ onChange={e => {
-                        console.log("SetR on first:");
-                        console.log(setReservation);
-                        if (setReservation) setReservation((r) => ({
-                            person: {
-                                firstName: e.nativeEvent.text,
-                                familyName: r.person?.familyName,
-                                email: r.person?.email,
-                                phone: r.person?.phone
-                            },
-                            ...r
-                        }))
+                    <TextInput key={1} value={person?.firstName ?? ''} style={textInputStyles.basic} onChangeText={t => {
+                        if (setPerson) setPerson({
+                            ...person,
+                            firstName: t
+                        })
                     }} />
                     <Text>Příjmení</Text>
-                    <TextInput value={reservation?.person?.familyName} /*style={textInputStyles.basic}*/ onChange={e => {
-                        console.log("SetR on family:");
-                        console.log(setReservation);
-                        if (setReservation) setReservation((r) => ({
-                            person: {
-                                firstName: r.person?.firstName,
-                                familyName: e.nativeEvent.text,
-                                email: r.person?.email,
-                                phone: r.person?.phone
-                            },
-                            ...r
-                        }))
+                    <TextInput key={2} value={person?.familyName} style={textInputStyles.basic} onChangeText={t => {
+                        if (setPerson) setPerson({
+                            ...person,
+                            familyName: t,                            
+                        })
                     }} />
                     <Text>Email</Text>
-                    <TextInput value={reservation?.person?.email} /*style={textInputStyles.basic}*/ onChange={e => {
-                        if (setReservation) setReservation((r) => ({
-                            person: {
-                                firstName: r.person?.firstName,
-                                familyName: r.person?.familyName,
-                                email: e.nativeEvent.text,
-                                phone: r.person?.phone
-                            },
-                            ...r
-                        }))
+                    <TextInput key={3} value={person?.email} style={textInputStyles.basic} onChangeText={t => {
+                        if (setPerson) setPerson({
+                            ...person,
+                            email: t                            
+                        })
                     }} />
                     <Text>Telefon</Text>
-                    <TextInput value={reservation?.person?.phone} /*style={textInputStyles.basic}*/ onChange={e => {
-                        if (setReservation) setReservation((r) => ({
-                            person: {
-                                firstName: r.person?.firstName,
-                                familyName: r.person?.familyName,
-                                email: r.person?.email,
-                                phone: e.nativeEvent.text
-                            },
-                            ...r
-                        }))
+                    <TextInput key={4} value={person?.phone} style={textInputStyles.basic} onChangeText={t => {
+                        if (setPerson) setPerson({
+                            ...person,
+                            phone: t
+                        })
                     }} />
-                    <Button title="Reserve my place" onPress={() => {
-                        console.log(reservation)
+                    <Button title="Pokračovat ke shrnutí" onPress={() => {
+                        navigation.navigate("ReservationSummary");
                     }} />
                 </View>
             </View>

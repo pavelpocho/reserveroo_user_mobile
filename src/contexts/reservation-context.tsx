@@ -1,10 +1,13 @@
 import React, { createContext, useContext, useMemo, useState } from "react";
 import Reservation from "../data_mgmt/reservation";
+import User from "../data_mgmt/user";
 
 
 export interface ReservationContext {
     reservation: Reservation,
-    setReservation: React.Dispatch<React.SetStateAction<Reservation>>
+    person: User,
+    setReservation: React.Dispatch<React.SetStateAction<Reservation>>,
+    setPerson: React.Dispatch<React.SetStateAction<User>>
 }
 
 export const ReservationContext = createContext<ReservationContext | undefined>(undefined);
@@ -19,8 +22,9 @@ interface ReservationContextProviderProps extends Partial<React.PropsWithChildre
 
 export const ReservationContextProvider: React.FC<ReservationContextProviderProps> = ({ children }) => {
     const [ reservation, setReservation ] = useState<Reservation>({});
+    const [ person, setPerson ] = useState<User>({});
 
-    const value = useMemo(() => ({ reservation, setReservation }), [reservation, setReservation]);
+    const value = useMemo(() => ({ reservation, setReservation, person, setPerson }), [reservation, setReservation, person, setPerson]);
 
     return <ReservationContext.Provider value={value}>
         { children }
