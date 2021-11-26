@@ -1,3 +1,4 @@
+import { Category } from "../src/data_mgmt/category_names";
 import Place from "../src/data_mgmt/place";
 import { ReservableType } from "../src/data_mgmt/reservable";
 
@@ -23,6 +24,9 @@ const places: Place[] = [
                 closeHour: 23,
                 timeStepInHours: 1
             }
+        ],
+        categories: [
+            Category.leisure
         ]
     },
     {
@@ -38,6 +42,9 @@ const places: Place[] = [
                 closeHour: 22,
                 timeStepInHours: 2
             }
+        ],
+        categories: [
+            Category.restaurants
         ]
     },
     {
@@ -61,6 +68,9 @@ const places: Place[] = [
                 closeHour: 21,
                 timeStepInHours: 0.5
             }
+        ],
+        categories: [
+            Category.sport
         ]
     }
 ]
